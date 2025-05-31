@@ -1,36 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import AvatarIcon from "../components/AvatarIcon";
+import { getProfile } from "../api/viewer.js";
 
 export default function Viewer() {
-  const profile = {
-    name: "Shakeel Ahmad",
-    title: "Full Stack Developer",
-    bio: "Hi! I build clean, efficient, and scalable web applications using Laravel, React, and Python. Passionate about solving problems with code.",
-    avatar: "https://ui-avatars.com/api/?name=Shakeel+Ahmad&background=random",
-    website: "https://shakeel.dev",
-    linkedin: "https://linkedin.com/in/shakeel",
-    projects: [
-      {
-        title: "Portfolio Website",
-        description: "A personal site showcasing my projects and skills.",
-        url: "https://shakeel.dev",
-      },
-      {
-        title: "Smart QR Card",
-        description: "Digital card generator with customizable layouts and QR codes.",
-        url: "#",
-      },
-    ],
-  };
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    getProfile()
+      .then((response) => {
+        setProfile(response.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching profile:", err);
+        setError("Failed to load profile data");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div className="p-6">Loading profile...</div>;
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
+  if (!profile) return <div className="p-6 text-red-500">No profile data available</div>;
 
   return (
     <div className="min-h-screen bg-white text-gray-800 p-6 flex flex-col items-center">
       {/* Profile Header */}
       <div className="flex flex-col items-center text-center mb-8">
-        <img
-          src={profile.avatar}
-          alt={profile.name}
-          className="w-28 h-28 rounded-full border mb-4"
-        />
+        {profile.avatar ? (
+          <img
+            src={profile.avatar}
+            alt={profile.name}
+            className="w-28 h-28 rounded-full border mb-4"
+          />
+        ) : (
+          <AvatarIcon />
+        )}
         <h1 className="text-2xl font-bold">{profile.name}</h1>
         <p className="text-gray-600">{profile.title}</p>
         <p className="mt-4 max-w-xl">{profile.bio}</p>

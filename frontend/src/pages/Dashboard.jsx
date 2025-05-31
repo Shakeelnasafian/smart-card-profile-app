@@ -1,26 +1,16 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import AvatarIcon from "../components/Avatar"; // Assuming you have an Avatar component
+import React, { useEffect, useState } from "react";
+import { getDashboardData } from "../api/dashboard";
+import AvatarIcon from "../components/AvatarIcon"; 
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
+  const [user, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log(process.env);
-    axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/dashboard`)
-      .then((response) => {
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching dashboard data:", error);
-        setError("Failed to load data");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    getDashboardData()
+      .then((response) => setData(response.data))
+      .catch((error) => console.error("Error fetching dashboard data:", error))
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="p-6">Loading dashboard...</div>;

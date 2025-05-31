@@ -1,27 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { getProfile } from "../api/profile.js";
+import AvatarIcon from "../components/AvatarIcon";
 
 export default function Profile() {
-  const user = {
-    name: "Shakeel Ahmad",
-    title: "Full Stack Developer",
-    bio: "Experienced developer skilled in Laravel, React, and Python. Passionate about building smart digital solutions.",
-    email: "shakeel@example.com",
-    phone: "+971 50 123 4567",
-    website: "https://shakeel.dev",
-    linkedin: "https://linkedin.com/in/shakeel",
-    avatar: "https://ui-avatars.com/api/?name=Shakeel+Ahmad&background=random",
-  };
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProfile()
+      .then((response) => setUser(response.data))
+      .catch((error) => console.error("Error fetching profile data:", error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="p-6">Loading profile...</div>;
+  if (!user)
+    return <div className="p-6 text-red-500">Failed to load profile data</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center px-4 py-8">
       <div className="bg-white shadow-lg rounded-lg max-w-3xl w-full p-6">
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-6">
-          <img
-            src={user.avatar}
-            alt="Profile"
-            className="w-28 h-28 rounded-full mb-4 border"
-          />
+          {user.avatar ? (
+            <img
+              src={user.avatar}
+              alt="Profile"
+              className="w-28 h-28 rounded-full mb-4 border"
+            />
+          ) : (
+            <AvatarIcon />
+          )}
           <h1 className="text-2xl font-bold">{user.name}</h1>
           <p className="text-gray-600">{user.title}</p>
         </div>
@@ -30,10 +39,20 @@ export default function Profile() {
         <div className="flex justify-center gap-4 text-sm text-gray-700 mb-6 flex-wrap">
           <p>📧 {user.email}</p>
           <p>📞 {user.phone}</p>
-          <a href={user.website} className="text-blue-500 hover:underline" target="_blank" rel="noreferrer">
+          <a
+            href={user.website}
+            className="text-blue-500 hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
             🌐 Website
           </a>
-          <a href={user.linkedin} className="text-blue-500 hover:underline" target="_blank" rel="noreferrer">
+          <a
+            href={user.linkedin}
+            className="text-blue-500 hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
             💼 LinkedIn
           </a>
         </div>
