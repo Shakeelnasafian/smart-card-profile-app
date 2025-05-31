@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/profile", tags=["profile"])
+router = APIRouter(prefix="/viewer/profile", tags=["profile"])
 @router.get("/")
 
 def get_public_profile(username: str):
