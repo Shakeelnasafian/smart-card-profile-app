@@ -19,11 +19,15 @@ class UserInDB(BaseModel):
     email: str
     hashed_password: str
 
+class User(BaseModel):
+    username: str
+    email: str
+
 fake_users_db = {
     "shakeel": {
         "username": "shakeel",
         "email": "shakeel@example.com",
-        "hashed_password": "fakehashedpassword"
+        "hashed_password": "shakeel"
     }
 }
 
@@ -32,7 +36,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 def verify_password(plain_password, hashed_password):
     return plain_password == hashed_password  # In a real app, use a proper hashing function
 
-def get_user(db, username: str):
+def get_user(username: str):
     if username in fake_users_db:
         user_dict = fake_users_db[username]
         return UserInDB(**user_dict)
@@ -71,6 +75,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return Token(access_token=access_token, token_type="bearer")
 
+@router.get("/me", response_model=User) 
 async def read_users_me(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -84,7 +89,9 @@ async def read_users_me(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username)
+    
+    user = get_user(username)
     if user is None:
         raise credentials_exception
+    
     return user
