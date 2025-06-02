@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Viewer from './pages/Viewer';
+import Projects from './pages/Projects';
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -43,6 +44,8 @@ function AppRoutes() {
           </ProtectedRoute>
         } 
       />
+      
+      <Route path="/projects" element={<Projects />} />
       <Route path="/viewer" element={<Viewer />} />
     </Routes>
   );
