@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getDashboardData } from "../api/dashboard";
 import AvatarIcon from "../components/AvatarIcon"; 
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const [user, setData] = useState(null);
@@ -38,12 +39,15 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="space-x-2">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Edit Profile
-          </button>
-          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-            View QR Code
-          </button>
+          <Link to="/profile" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Profile
+          </Link>
+          <Link to="/projects" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Projects
+          </Link>
+          <Link to="/viewer" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Viewer Profile
+          </Link>
         </div>
       </div>
 
